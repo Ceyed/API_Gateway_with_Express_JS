@@ -8,7 +8,7 @@ app.get('/test_api', (req, res, next) => {
     res.json('Hello from API service')
 })
 
-app.get('/foo', (req, res, next) => {
+app.post('/foo', (req, res, next) => {
     res.json('foo func')
 })
 
