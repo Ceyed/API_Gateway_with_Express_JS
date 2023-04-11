@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const axios = require('axios')
 
-const HOST = 'http://localhost'
+const HOST = 'localhost'
 const PORT = 3002
 
 app.use(express.json())
@@ -22,9 +22,9 @@ app.listen(PORT, () => {
         url: 'http://localhost:3000/register',
         data: {
             apiName: "testapi",
+            protocol: 'http',
             host: HOST,
             port: PORT,
-            url: HOST + ':' + PORT + '/'
         }
     }).then((response) => {
         console.log(response.data)

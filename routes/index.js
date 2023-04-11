@@ -24,6 +24,7 @@ router.all('/:apiName/:path', (req, res) => {
 
 router.post('/register', (req, res) => {
     const registrationInfo = req.body
+    registrationInfo.url = registrationInfo.protocol + '://' + registrationInfo.host + ':' + registrationInfo.port + '/'
     registry.services[registrationInfo.apiName] = { ...registrationInfo }
 
     fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {

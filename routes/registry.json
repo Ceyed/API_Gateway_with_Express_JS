@@ -1,1 +1,11 @@
-{"services":{"testapi":{"apiName":"testapi","host":"http://localhost","port":3002,"url":"http://localhost:3002/"}}}
+{
+    "services": {
+        "testapi": {
+            "apiName": "testapi",
+            "protocol": "http",
+            "host": "localhost",
+            "port": 3002,
+            "url": "http://localhost:3002/"
+        }
+    }
+}
