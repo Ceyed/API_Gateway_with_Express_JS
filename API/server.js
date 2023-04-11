@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
-const PORT = 3001
+const axios = require('axios')
+
+const HOST = 'http://localhost'
+const PORT = 3002
 
 app.use(express.json())
 
@@ -13,5 +16,18 @@ app.post('/foo', (req, res, next) => {
 })
 
 app.listen(PORT, () => {
+    axios({
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        url: 'http://localhost:3000/register',
+        data: {
+            apiName: "testapi",
+            host: HOST,
+            port: PORT,
+            url: HOST + ':' + PORT + '/'
+        }
+    }).then((response) => {
+        console.log(response.data)
+    })
     console.log(`API server is online on port ${PORT}`)
 })
