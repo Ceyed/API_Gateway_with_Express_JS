@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Ceyed/API_Gateway_with_Express_JS#readme",
   "dependencies": {
     "axios": "^1.3.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "helmet": "^6.1.4"
   }
 }
