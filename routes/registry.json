@@ -21,6 +21,14 @@
                     "enabled": true
                 }
             ]
+        },
+        "auth": {
+            "users": {
+                "johndoe": {
+                    "username": "johndoe",
+                    "password": "password"
+                }
+            }
         }
     }
 }

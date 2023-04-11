@@ -16,9 +16,15 @@ app.post('/foo', (req, res, next) => {
 })
 
 app.listen(PORT, () => {
+    const authString = 'johndoe:password'
+    const encodedAuthString = Buffer.from(authString, 'utf-8').toString('base64')
+
     axios({
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'authorization': encodedAuthString,
+            'content-type': 'application/json',
+        },
         url: 'http://localhost:3000/register',
         data: {
             apiName: "testapi",
