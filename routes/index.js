@@ -27,7 +27,7 @@ router.post('/register', (req, res) => {
     registrationInfo.url = registrationInfo.protocol + '://' + registrationInfo.host + ':' + registrationInfo.port + '/'
 
     if (apiAlreadyExists(registrationInfo)) {
-        res.send(`Configuration exists for ${registrationInfo.apiName} at ${registrationInfo.host + ':' + registrationInfo.port + '/'}`)
+        res.send(`Configuration already exists for ${registrationInfo.apiName} at ${registrationInfo.host + ':' + registrationInfo.port + '/'}`)
     }
     else {
         registry.services[registrationInfo.apiName].push({ ...registrationInfo })
@@ -41,6 +41,28 @@ router.post('/register', (req, res) => {
             }
         })
     }
+})
+
+router.post('/unregister', (req, res) => {
+    const registrationInfo = req.body
+    if (apiAlreadyExists(registrationInfo)) {
+        const index = registry.services[registrationInfo.apiName].findIndex((instance) => {
+            return registrationInfo.url === instance.url
+        })
+        registry.services[registrationInfo.apiName].splice(index, 1)
+        fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {
+            if (error) {
+                res.send(`Couldn't unregister '${registrationInfo.apiName}'\nERROR: ${error}\n`)
+            }
+            else {
+                res.send(`Successfully unregistered '${registrationInfo.apiName}'\n`)
+            }
+        })
+    }
+    else {
+        res.send(`Configuration does not exist for ${registrationInfo.apiName} at ${registrationInfo.host + ':' + registrationInfo.port + '/'}`)
+    }
+
 })
 
 const apiAlreadyExists = (registrationInfo) => {

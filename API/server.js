@@ -3,7 +3,7 @@ const app = express()
 const axios = require('axios')
 
 const HOST = 'localhost'
-const PORT = 3002
+const PORT = 3001
 
 app.use(express.json())
 
