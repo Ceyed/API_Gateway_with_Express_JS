@@ -5,6 +5,30 @@ const registry = require('./registry.json')
 const fs = require('fs')
 const loadbalancer = require('../util/loadbalancer')
 
+
+router.post('/enable/:apiName', (req, res) => {
+    const apiName = req.params.apiName
+    const requestBody = req.body
+    const instances = registry.services[apiName].instances
+    const index = instances.findIndex((srv) => {
+        return srv.url === requestBody.url
+    })
+    if (index == -1) {
+        res.send({ status: "error", message: `Could not find '${requestBody.url}' for service '${apiName}` })
+    }
+    else {
+        instances[index].enabled = requestBody.enabled
+        fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {
+            if (error) {
+                res.send(`Couldn't enabled/disabled '${requestBody.url}' for service '${apiName}'\nERROR: ${error}\n`)
+            }
+            else {
+                res.send(`Successfully enabled/disabled '${requestBody.url}'\n`)
+            }
+        })
+    }
+})
+
 router.all('/:apiName/:path', (req, res) => {
     const service = registry.services[req.params.apiName]
     if (service) {

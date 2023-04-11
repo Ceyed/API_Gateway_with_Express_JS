@@ -9,14 +9,16 @@
                     "protocol": "http",
                     "host": "localhost",
                     "port": 3002,
-                    "url": "http://localhost:3002/"
+                    "url": "http://localhost:3002/",
+                    "enabled": false
                 },
                 {
                     "apiName": "testapi",
                     "protocol": "http",
                     "host": "localhost",
                     "port": 3001,
-                    "url": "http://localhost:3001/"
+                    "url": "http://localhost:3001/",
+                    "enabled": true
                 }
             ]
         }
