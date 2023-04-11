@@ -8,6 +8,14 @@ const loadbalancer = require('../util/loadbalancer')
 router.all('/:apiName/:path', (req, res) => {
     const service = registry.services[req.params.apiName]
     if (service) {
+        if (!service.loadBalancerStrategy) {
+            service.loadBalancerStrategy = 'ROUND_RUBIN'
+            fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {
+                if (error) {
+                    res.send(`Could't write loadBalanceStrategy`)
+                }
+            })
+        }
         const newIndex = loadbalancer[service.loadBalancerStrategy](service)
         const url = service.instances[newIndex].url
         console.log(url)
@@ -36,7 +44,7 @@ router.post('/register', (req, res) => {
         res.send(`Configuration already exists for ${registrationInfo.apiName} at ${registrationInfo.host + ':' + registrationInfo.port + '/'}`)
     }
     else {
-        registry.services[registrationInfo.apiName].push({ ...registrationInfo })
+        registry.services[registrationInfo.apiName].instances.push({ ...registrationInfo })
 
         fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {
             if (error) {
@@ -52,10 +60,10 @@ router.post('/register', (req, res) => {
 router.post('/unregister', (req, res) => {
     const registrationInfo = req.body
     if (apiAlreadyExists(registrationInfo)) {
-        const index = registry.services[registrationInfo.apiName].findIndex((instance) => {
+        const index = registry.services[registrationInfo.apiName].instances.findIndex((instance) => {
             return registrationInfo.url === instance.url
         })
-        registry.services[registrationInfo.apiName].splice(index, 1)
+        registry.services[registrationInfo.apiName].instances.splice(index, 1)
         fs.writeFile('./routes/registry.json', JSON.stringify(registry), (error) => {
             if (error) {
                 res.send(`Couldn't unregister '${registrationInfo.apiName}'\nERROR: ${error}\n`)
@@ -73,7 +81,7 @@ router.post('/unregister', (req, res) => {
 
 const apiAlreadyExists = (registrationInfo) => {
     let exists = false
-    registry.services[registrationInfo.apiName].forEach(instance => {
+    registry.services[registrationInfo.apiName].instances.forEach(instance => {
         if (instance.url === registrationInfo.url) {
             exists = true
             return
